@@ -7,25 +7,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
 class CollectionDemoTest {
 
-    private final CollectionDemo demo = new CollectionDemo();
+    private final CollectionDemo demo = new CollectionDemo<Integer>();
 
     @Test
-    void assertAllJavaCollections() {
+    void assertAllJavaCollections_fromStream() {
         should_throw_exception_when_adding_a_value_to_an_immutable_list(demo::anImmutableCollectionJava8);
+        should_throw_exception_when_adding_a_value_to_an_immutable_list(demo::anImmutableCollectionJava10);
         should_throw_exception_when_adding_a_value_to_an_immutable_list(demo::anImmutableCollectionJava16);
     }
 
-    void should_throw_exception_when_adding_a_value_to_an_immutable_list(final Function<Number[], List<Number>> initializer) {
+    void should_throw_exception_when_adding_a_value_to_an_immutable_list(final Function<Stream<Integer>, List<Integer>> initializer) {
         // Given
-        final Integer[] numbers = new Integer[]{1, 2, 3};
+        final Stream<Integer> numbers = Stream.of(1, 2, 3);
 
         // When
-        final List<Number> actual = initializer.apply(numbers);
+        final List<Integer> actual = initializer.apply(numbers);
 
         // Then
         then(Assertions.catchThrowable(() -> actual.add(4)))
@@ -35,10 +37,10 @@ class CollectionDemoTest {
     @Test
     void should_create_a_new_object_when_adding_a_value_to_an_immutable_list() {
         // Given
-        final Integer[] numbers = new Integer[]{1, 2, 3};
+        final Stream<Integer> numbers = Stream.of(1, 2, 3);
 
         // When
-        final io.vavr.collection.List<Number> actual = demo.anImmutableCollectionWithVavr(numbers);
+        final io.vavr.collection.List<Integer> actual = demo.anImmutableCollectionWithVavr(numbers);
 
         // Then
         final var newList = actual.append(4);
