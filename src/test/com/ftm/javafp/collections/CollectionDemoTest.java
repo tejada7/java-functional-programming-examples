@@ -4,7 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -43,5 +45,19 @@ class CollectionDemoTest {
         then(actual).isNotEqualTo(newList);
         System.out.println(actual);
         System.out.println(newList);
+    }
+
+    // List("a", "b", "c") -> Map[(0, "a"), (1, "b"), (2, "c")]
+    @Test
+    void should_zip_index_to_element() {
+        // Given
+        final String[] args = {"a", "b", "c"};
+
+        // When
+        final Map<Integer, String> elementByIndex = demo.zipWithIndex(args);
+
+        // Then
+        IntStream.range(0, args.length)
+                .forEach(index -> then(elementByIndex.get(index)).isEqualTo(args[index]));
     }
 }
